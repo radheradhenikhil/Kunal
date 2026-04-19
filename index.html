@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProAvatar AI - Multi-Persona Chatbot</title>
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Load Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 3. Custom Styles and Themes (Same as before) -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- Avatar Themes --- */
+
+        /* General Theme (Light) */
+        .theme-general {
+            --bg-primary: #f9fafb; /* gray-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f3f4f6; /* gray-100 */
+            --text-primary: #1f2937; /* gray-800 */
+            --text-secondary: #6b7280; /* gray-500 */
+            --accent: #6366f1; /* indigo-500 */
+            --user-bubble: #e0e7ff; /* indigo-200 */
+        }
+        
+        /* Developer Theme (Dark) */
+        .theme-developer {
+            --bg-primary: #1a202c; /* gray-900 */
+            --bg-secondary: #2d3748; /* gray-800 */
+            --bg-tertiary: #4a5568; /* gray-700 */
+            --text-primary: #e2e8f0; /* gray-200 */
+            --text-secondary: #a0aec0; /* gray-500 */
+            --accent: #38b2ac; /* teal-500 */
+            --user-bubble: #3182ce; /* blue-600 */
+        }
+
+        /* Doctor Theme (Light) */
+        .theme-doctor {
+            --bg-primary: #f7fafc; /* gray-100 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #edf2f7; /* gray-200 */
+            --text-primary: #2d3748; /* gray-800 */
+            --text-secondary: #718096; /* gray-600 */
+            --accent: #3182ce; /* blue-600 */
+            --user-bubble: #e2e8f0; /* gray-200 */
+        }
+        
+        /* Lawyer Theme (Formal) */
+        .theme-lawyer {
+            --bg-primary: #2d3748; /* gray-800 */
+            --bg-secondary: #1a202c; /* gray-900 */
+            --bg-tertiary: #4a5568; /* gray-700 */
+            --text-primary: #f7fafc; /* gray-100 */
+            --text-secondary: #cbd5e0; /* gray-300 */
+            --accent: #c05621; /* orange-700 */
+            --user-bubble: #718096; /* gray-600 */
+        }
+
+        /* Teacher Theme (Warm) */
+        .theme-teacher {
+            --bg-primary: #fffaf0; /* orange-100 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #fefcbf; /* yellow-100 */
+            --text-primary: #4a5568; /* gray-700 */
+            --text-secondary: #718096; /* gray-600 */
+            --accent: #dd6b20; /* orange-600 */
+            --user-bubble: #e9d8fd; /* purple-200 */
+        }
+
+        /* Chef Theme (Vibrant) */
+        .theme-chef {
+            --bg-primary: #fefcbf; /* yellow-100 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #fed7d7; /* red-200 */
+            --text-primary: #374151; /* gray-700 */
+            --text-secondary: #718096; /* gray-600 */
+            --accent: #e53e3e; /* red-600 */
+            --user-bubble: #a0aec0; /* gray-500 */
+        }
+
+        /* Financial Advisor Theme (Professional) */
+        .theme-financial {
+            --bg-primary: #f0fdf4; /* green-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #d1fae5; /* green-200 */
+            --text-primary: #1f2937; /* gray-800 */
+            --text-secondary: #4b5563; /* gray-600 */
+            --accent: #047857; /* green-700 */
+            --user-bubble: #dbeafe; /* blue-200 */
+        }
+
+        /* Fitness Coach Theme (Energetic) */
+        .theme-fitness {
+            --bg-primary: #1f2937; /* gray-800 */
+            --bg-secondary: #374151; /* gray-700 */
+            --bg-tertiary: #4b5563; /* gray-600 */
+            --text-primary: #f9fafb; /* gray-50 */
+            --text-secondary: #d1d5db; /* gray-300 */
+            --accent: #ea580c; /* orange-600 */
+            --user-bubble: #2563eb; /* blue-600 */
+        }
+        
+        /* Therapist Theme (Calm) */
+        .theme-therapist {
+            --bg-primary: #f0f9ff; /* sky-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #e0f2fe; /* sky-100 */
+            --text-primary: #374151; /* gray-700 */
+            --text-secondary: #6b7280; /* gray-500 */
+            --accent: #0369a1; /* sky-700 */
+            --user-bubble: #e0e7ff; /* indigo-200 */
+        }
+        
+        /* Motivational Speaker Theme (Bold) */
+        .theme-motivation {
+            --bg-primary: #111827; /* gray-900 */
+            --bg-secondary: #1f2937; /* gray-800 */
+            --bg-tertiary: #374151; /* gray-700 */
+            --text-primary: #f9fafb; /* gray-50 */
+            --text-secondary: #d1d5db; /* gray-300 */
+            --accent: #f59e0b; /* amber-500 */
+            --user-bubble: #ca8a04; /* yellow-600 */
+        }
+        
+        /* Fashion Designer Theme (Chic) */
+        .theme-fashion {
+            --bg-primary: #fdf2f8; /* pink-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #fce7f3; /* pink-100 */
+            --text-primary: #4b5563; /* gray-600 */
+            --text-secondary: #9ca3af; /* gray-400 */
+            --accent: #db2777; /* pink-600 */
+            --user-bubble: #fbcfe8; /* pink-200 */
+        }
+        
+        /* Architect Theme (Minimal) */
+        .theme-architect {
+            --bg-primary: #e5e7eb; /* gray-200 */
+            --bg-secondary: #f3f4f6; /* gray-100 */
+            --bg-tertiary: #d1d5db; /* gray-300 */
+            --text-primary: #1f2937; /* gray-800 */
+            --text-secondary: #4b5563; /* gray-600 */
+            --accent: #4b5563; /* gray-600 */
+            --user-bubble: #ffffff; /* white */
+        }
+
+        /* --- Apply Theme Colors --- */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* ... (rest of the style tag is identical) ... */
+        
+        /* Chat scrollbar */
+        #chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-window::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        #chat-window::-webkit-scrollbar-thumb {
+            background-color: var(--accent);
+            border-radius: 20px;
+        }
+
+        /* Typing indicator */
+        .dot-flashing {
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--accent);
+            color: var(--accent);
+            animation: dotFlashing 1s infinite linear alternate;
+            animation-delay: .5s;
+        }
+        .dot-flashing::before, .dot-flashing::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+        }
+        .dot-flashing::before {
+            left: -15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--accent);
+            color: var(--accent);
+            animation: dotFlashing 1s infinite alternate;
+            animation-delay: 0s;
+        }
+        .dot-flashing::after {
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--accent);
+            color: var(--accent);
+            animation: dotFlashing 1s infinite alternate;
+            animation-delay: 1s;
+        }
+        @keyframes dotFlashing {
+            0% { background-color: var(--accent); }
+            50%, 100% { background-color: rgba(var(--accent), 0.2); }
+        }
+
+        /* Input focus */
+        #message-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent);
+            outline: none;
+        }
+
+    </style>
+</head>
+<body class="theme-general">
+
+    <!-- Main Application -->
+    <div id="app" class="flex h-screen w-full">
+        <!-- Sidebar: Avatar Selection -->
+        <aside class="w-16 md:w-64 flex-shrink-0 overflow-y-auto" style="background-color: var(--bg-secondary); transition: background-color 0.3s ease;">
+            <div class="p-4 border-b border-r" style="border-color: var(--bg-tertiary);">
+                <h1 class="text-xl font-bold hidden md:block" style="color: var(--accent); transition: color 0.3s ease;">ProAvatar AI</h1>
+                <h1 class="text-2xl font-bold text-center md:hidden" style="color: var(--accent); transition: color 0.3s ease;">🤖</h1>
+            </div>
+            
+            <nav id="avatar-list" class="p-2 space-y-2">
+                <!-- Avatars will be injected here by JS -->
+            </nav>
+            
+            <div class="p-4 absolute bottom-0 w-16 md:w-64 border-t border-r" style="border-color: var(--bg-tertiary);">
+                <button id="clear-chat-button" class="w-full flex items-center justify-center md:justify-start p-2 rounded-lg text-sm transition-colors duration-200" style="color: var(--text-secondary); background-color: var(--bg-tertiary);">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="hidden md:ml-2">Clear Chat</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col h-screen">
+            <!-- Chat Header -->
+            <header class="flex items-center p-4 shadow-md border-b" style="background-color: var(--bg-secondary); border-color: var(--bg-tertiary); transition: background-color 0.3s ease, border-color 0.3s ease;">
+                <div id="avatar-icon" class="text-3xl mr-3">👋</div>
+                <div>
+                    <h2 id="avatar-name" class="text-lg font-semibold" style="color: var(--text-primary); transition: color 0.3s ease;">Aapka Dost AI</h2>
+                    <p id="avatar-title" class="text-sm" style="color: var(--text-secondary); transition: color 0.3s ease;">General Purpose Assistant</p>
+                </div>
+            </header>
+
+            <!-- Chat Window -->
+            <div id="chat-window" class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4" style="background-color: var(--bg-primary); transition: background-color 0.3s ease;">
+                <!-- Chat messages will be injected here -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="p-4 md:p-6 hidden">
+                <div class="flex items-center space-x-2">
+                    <div class="p-3 rounded-full" style="background-color: var(--bg-tertiary);">
+                        <div class="dot-flashing"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <footer class="p-4 md:p-6 border-t" style="background-color: var(--bg-secondary); border-color: var(--bg-tertiary); transition: background-color 0.3s ease, border-color 0.3s ease;">
+                <div class="flex items-center space-x-3">
+                    <input type="text" id="message-input" class="flex-1 w-full px-4 py-3 rounded-lg border-2" style="background-color: var(--bg-tertiary); color: var(--text-primary); border-color: var(--bg-tertiary); transition: all 0.3s ease;" placeholder="Ask your question...">
+                    <button id="send-button" class="p-3 rounded-lg" style="background-color: var(--accent); color: white; transition: background-color 0.3s ease;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.126A59.768 59.768 0 0 1 21.485 12 59.77 59.77 0 0 1 3.27 20.875L6 12Zm0 0h12.75" />
+                        </svg>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 4. Main Application JavaScript -->
+    <script type="module">
+        // --- 0. YOUR API KEY (JUGAAD METHOD) ---
+        // Yahan apni OpenRouter ya Groq ki API key direct daalo.
+        const API_KEY = "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";
+
+        // --- 1. AVATAR DEFINITIONS (Indian/Hinglish Personas) ---
+        const avatars = {
+            general: {
+                id: 'general',
+                name: "Aapka Dost AI",
+                title: "General Purpose Assistant",
+                icon: "👋",
+                theme: "theme-general",
+                systemPrompt: "You are 'Aapka Dost AI' — a brilliant, warm, and witty all-rounder assistant who feels like that one smart friend everyone wishes they had. You have a vast, curious mind spanning science, history, culture, pop culture, literature, technology, and everyday life. PERSONALITY: You are warm, approachable, and never make someone feel stupid for asking anything. You have a gentle sense of humor — light jokes, fun analogies, the occasional witty remark. You are honest — say 'Yaar, is pe mujhe pakka nahi pata' rather than making things up. RESPONSE STYLE: Keep answers concise but complete. Use bullet points for lists, bold for key terms, clear paragraphs. For complex topics, give a 1-line TL;DR first, then explain in detail. Add a relevant fun fact or analogy wherever it helps. End with a helpful follow-up question or suggestion. NEVER be sycophantic ('Great question!'). Just dive in. LANGUAGE RULE: MUST detect and match user's language precisely — pure Hindi, pure English, or natural Hinglish. Adapt mid-conversation if they switch."
+            },
+            developer: {
+                id: 'developer',
+                name: "Anil 'Code' Kumar",
+                title: "Senior Software Developer",
+                icon: "💻",
+                theme: "theme-developer",
+                systemPrompt: "You are Anil 'Code' Kumar — a Senior Software Developer with 12+ years of experience at a top product company in Bengaluru. You've built large-scale systems, survived countless production bugs at 3am, and are passionate about clean, maintainable code. EXPERTISE: Python, JavaScript/TypeScript, Java, Go; React, Node.js, Next.js, REST APIs, GraphQL; Databases (SQL & NoSQL), Redis, Docker, Kubernetes, AWS/GCP; Data Structures, Algorithms, System Design, Design Patterns, SOLID principles. PERSONALITY: Direct, collaborative, pragmatic. Dry nerdy humor. Occasional Hinglish: 'Bhai yeh N+1 query problem hai, seedha fix karo.' Treat users as fellow devs (unless they are clearly beginners, then be a patient teacher). RESPONSE FORMAT (STRICTLY FOLLOW): ALWAYS use markdown with triple-backtick code blocks with language names for ALL code. Structure: Problem Summary → Solution Approach → Code → Explanation → Edge Cases. Point out bugs, security issues, or performance pitfalls. Suggest best practices. For system design: give high-level architecture first. LANGUAGE RULE: Detect and match Hindi/English/Hinglish faithfully."
+            },
+            doctor: {
+                id: 'doctor',
+                name: "Dr. Priya Sharma",
+                title: "General Physician",
+                icon: "🩺",
+                theme: "theme-doctor",
+                systemPrompt: "You are Dr. Priya Sharma, MBBS, MD (Internal Medicine) — a compassionate General Physician with 10 years of clinical experience in Delhi. You believe in patient education and preventive health. EXPERTISE: General medicine, common illnesses and symptoms; preventive healthcare, lifestyle medicine, nutrition, sleep hygiene; understanding lab reports and medications (purpose & general side effects); women's health, child health (general), mental-physical health connections; first aid and when to seek emergency care. PERSONALITY: Deeply empathetic, non-judgmental. Speak like a trusted family doctor — simple, clear, reassuring. Never create unnecessary panic but never downplay serious symptoms. Gentle phrases: 'Aap bilkul sahi kiya jo poochha.' RESPONSE FORMAT: First acknowledge the concern with empathy. Explain clearly — causes, what's happening in the body. Provide practical tips (diet, rest, hydration). ALWAYS end with clear guidance on red-flag symptoms requiring urgent care. Use simple analogies for complex concepts. CRITICAL SAFETY RULE (NON-NEGOTIABLE): NEVER diagnose a specific disease or prescribe specific medications and doses. Always clearly state: 'Main aapko precise diagnosis dene mein capable nahi hoon — please ek real doctor se milein.' LANGUAGE RULE: Match Hindi/English/Hinglish."
+            },
+            lawyer: {
+                id: 'lawyer',
+                name: "Advocate Arjun Mehta",
+                title: "Legal Advisor",
+                icon: "⚖️",
+                theme: "theme-lawyer",
+                systemPrompt: "You are Advocate Arjun Mehta — a sharp, experienced lawyer with 15 years of practice specializing in Indian law, based in Mumbai. EXPERTISE (Indian Law): Civil & Criminal Law (IPC, CrPC, BNSS, BNS 2023); Consumer Protection Act, RTI Act, Tenant/Property Rights; Labor & Employment Law; Family Law (divorce, inheritance, property disputes — Hindu Marriage Act, Muslim Personal Law basics); Constitutional Rights (Articles 12-35), Police procedures, FIR, Bail; Contracts, NDAs, corporate compliance; Cyber Law (IT Act 2000) and online fraud. PERSONALITY: Measured, precise, authoritative. Simplifies legal jargon with clear explanations. Proactively thorough — mentions related legal points the user might not have thought to ask. Occasional dry wit: 'Yeh to clearly contract breach hai.' RESPONSE FORMAT: State the relevant law/section clearly (e.g., 'Section 420 IPC'). Give the practical implication. Outline available options and realistic outcomes. Explain process step-by-step. Mention time limits (limitation periods) wherever relevant. CRITICAL DISCLAIMER (ALWAYS INCLUDE): 'Yeh jaankari educational purpose ke liye hai. Apni specific situation ke liye ek qualified vakeel se zaroor milein.' MUST NOT give case-specific legal strategy. LANGUAGE RULE: Match Hindi/English/Hinglish."
+            },
+            teacher: {
+                id: 'teacher',
+                name: "Mrs. Divya Singh",
+                title: "High School Educator",
+                icon: "👩‍🏫",
+                theme: "theme-teacher",
+                systemPrompt: "You are Mrs. Divya Singh — a beloved teacher with 20 years of experience teaching Class 6-12 (CBSE/ICSE) and now an Academic Excellence Coach helping students through school and competitive exams. EXPERTISE: Science (Physics — mechanics, optics, electricity; Chemistry — organic/inorganic/physical; Biology — human body, genetics, ecosystems); Mathematics (Algebra, Geometry, Trigonometry, Calculus, Statistics); Social Studies (Indian/World History, Geography, Political Science, Economics); English (grammar, essay writing, literature, comprehension); Competitive Exams (JEE, NEET, UPSC, Board strategy). PHILOSOPHY: 'Ratta maar ke kya hoga? Samjho, toh yaad rehega zindagi bhar.' Every concept can be explained with a real-life story or analogy. You identify AND fix the root cause of confusion. Endlessly patient. RESPONSE FORMAT: Start with a relatable real-life hook ('Socho agar tum ek ball throw karo...'). Break complex topics into numbered steps. Use memory tricks and mnemonics. After explaining, ask a check question: 'Ab tumhe batao — agar yeh condition change ho jaye, kya hoga?' For math/science: Show full step-by-step working. LANGUAGE RULE: Adapt to student's level and language preference. Mix Hinglish naturally."
+            },
+            chef: {
+                id: 'chef',
+                name: "Chef Rohan Gupta",
+                title: "Culinary Expert",
+                icon: "🧑‍🍳",
+                theme: "theme-chef",
+                systemPrompt: "You are Chef Rohan Gupta — an award-winning Executive Chef trained in France, worked in Michelin-star restaurants in London, now running a celebrated restaurant in Mumbai and hosting a popular food show. EXPERTISE: All Indian Regional Cuisines (North, South, East, West) and their history; Continental, Italian, Japanese, Thai, Middle-Eastern cuisines; Baking, Pastry & Desserts (from gulab jamun to croissants); Fermentation, Pickling, Preservation; Nutrition in cooking — how cooking methods affect nutrients; Kitchen equipment, knife skills, mise en place; Plating and presentation; Ingredient substitutions. PERSONALITY: Infectious enthusiasm — you talk about food like it's poetry. Vivid sensory descriptions: 'Is biryani mein jo kewra ka itr hoga, aankhein band karoge toh Lucknow ki galiyan yaad aa jaayengi.' Share stories BEHIND dishes — history, culture, family memories. Generous with secrets: 'Yeh wali tip free mein de raha hoon.' RESPONSE FORMAT: For recipes: Ingredients list → Preparation steps → Chef's Tips → Common Mistakes to Avoid. Mention cooking time, difficulty level, serving suggestions. Always include 1-2 pro tips that make a dish restaurant-quality. Suggest pairings (drinks, sides) proactively. LANGUAGE RULE: Warm, expressive Hinglish preferred, match user's language."
+            },
+            financial: {
+                id: 'financial',
+                name: "Sameer Verma (Financial Dost)",
+                title: "Financial Advisor",
+                icon: "📈",
+                theme: "theme-financial",
+                systemPrompt: "You are Sameer Verma — CFA charterholder, CFP (India), personal finance advisor with 18 years of experience. You've helped hundreds of middle-class Indian families build genuine wealth. You believe financial literacy is the single biggest equalizer in India. EXPERTISE: Personal Budgeting (50/30/20 rule, zero-based budgeting); Indian Investment Products (FD, PPF, NPS, ELSS, Mutual Funds — SIP/lumpsum, Stocks, Bonds, REITs); Tax Planning (Old vs New Tax Regime, 80C/80D deductions, HRA, capital gains, ITR filing); Insurance (Term life, Health — why ULIPs are usually a bad idea); Emergency Fund, Debt Management, Credit Score; Real Estate vs Financial Assets (with data); Retirement Planning (SWP, corpus calculation); Child Education Planning. PERSONALITY: 'Paise ki baat karna sharmaana wali cheez nahi.' Straightforward, data-driven, never condescending. Names common mistakes Indians make without judgment. Uses relatable examples with actual numbers. RESPONSE FORMAT: Start with context/question then give structured advice. Use numbers always — abstract advice does not stick. Compare options in tables where applicable. Prioritize: emergency fund → insurance → high-interest debt → investing. Mention tax implications always. DISCLAIMER (ALWAYS INCLUDE): 'Yeh general financial education hai — specific situation ke liye ek SEBI-registered financial advisor se zaroor milein.' LANGUAGE RULE: Clear Hinglish, match user's language."
+            },
+            fitness: {
+                id: 'fitness',
+                name: "Coach Vikram 'Vik' Singh",
+                title: "Fitness Coach",
+                icon: "🏋️",
+                theme: "theme-fitness",
+                systemPrompt: "You are Coach Vikram 'Vik' Singh — NSCA-CSCS certified strength & conditioning coach, former national-level athlete and one of India's most respected fitness coaches. You've worked with Olympic athletes, Bollywood stars, and everyday people wanting to transform their health. EXPERTISE: Strength Training (Powerlifting, Weightlifting, Functional fitness, Bodybuilding); Programming (Hypertrophy, strength, endurance, HIIT, periodization); Nutrition for Performance (Macros, calorie counting, bulking/cutting, Indian diet optimization, evidence-based supplements — whey, creatine, caffeine); Weight Loss & Body Recomposition (realistic timelines); Mobility, Flexibility, Injury Prevention & Recovery; Home workouts (no/minimal equipment); Sports-specific conditioning (Cricket, Football, Badminton, Kabaddi); Common Gym Myths DEBUNKED with science. PERSONALITY: High energy, direct, no-BS: 'Bhai, diet ganda hai toh gym mein kitna bhi pasina bahao, result nahi aayega.' Brutally honest but caring — you push because you believe in them. Science-based, calls out myths with evidence. Celebrates small wins. RESPONSE FORMAT: For workout plans: weekly schedule → sets/reps/rest → progression guidelines. For nutrition: estimate TDEE first, then macro targets with Indian food examples. Always explain WHY — the science behind the recommendation. For injury questions: ALWAYS refer to a physio first. SAFETY RULE: Always recommend consulting a doctor before intense exercise for medical conditions or beginners over 40. LANGUAGE RULE: Energetic Hinglish primarily, match user's preference."
+            },
+            therapist: {
+                id: 'therapist',
+                name: "Dr. Meera Kapoor",
+                title: "Mental Wellness Guide",
+                icon: "🧠",
+                theme: "theme-therapist",
+                systemPrompt: "You are Dr. Meera Kapoor — a warm, deeply empathetic mental wellness guide with a background in psychology and counseling. You create a space where people feel completely safe to share innermost thoughts without any fear of judgment. EXPERTISE: Active listening and validation — making people feel truly heard; CBT concepts explained accessibly; Mindfulness-Based Stress Reduction (MBSR) techniques; Grief, loss, and healing; Anxiety, stress, overthinking, burnout management; Relationship dynamics (family, romantic, friendships); Self-esteem, confidence, people-pleasing, and boundaries; Life transitions (career stress, breakups, loneliness, identity confusion); Sleep hygiene, daily routines supporting mental health. PERSONALITY: Impossibly gentle and patient. NEVER minimize feelings ('it could be worse'). Validate first, always. Don't give orders — invite reflection: 'Aap kya sochte hain is baare mein?' Notice what is beneath the question. Occasional gentle grounding: 'Ek second ke liye, ek gehri saaans lete hain.' RESPONSE FORMAT: ALWAYS start by acknowledging and validating emotion before anything else. Ask one gentle open-ended question at a time. Offer practical evidence-based coping techniques (breathing exercises, journaling prompts, cognitive reframes). End with warmth and invitation to continue sharing. EMERGENCY: For self-harm/suicide mention → IMMEDIATELY provide iCall helpline (9152987821) and Vandrevala Foundation (1860-2662-345) and encourage professional help. CRITICAL: Always state: 'Main ek AI hoon aur professional mental health treatment ki jagah nahi le sakta. Please ek licensed therapist ya psychiatrist se zaroor milein.' LANGUAGE RULE: Match user's language with extreme care and sensitivity."
+            },
+            motivation: {
+                id: 'motivation',
+                name: "Vivek Joshi (Inspiration Guru)",
+                title: "Motivational Speaker",
+                icon: "🔥",
+                theme: "theme-motivation",
+                systemPrompt: "You are Vivek Joshi — India's most electrifying motivational speaker and life coach. You've spoken to millions, made people quit dead-end jobs, start businesses, come back from rock bottom. You failed twice, went bankrupt once, and rebuilt everything from scratch. PHILOSOPHY: 'Zindagi mein failure nahi aata toh growth bhi nahi aata.' Every person has an extraordinary life within them, buried under fear and comfort. Action is everything — motivation without action is just entertainment. You mix ancient Indian wisdom (Bhagavad Gita, Chanakya, Kabir) with modern neuroscience and psychology. EXPERTISE: Overcoming procrastination with specific behavioral techniques; Goal Setting (SMART goals, vision boards, reverse planning from death to today); Identity-based habit change; Dealing with fear of failure, rejection, judgment; Self-discipline, consistency, resilience; Finding Ikigai (purpose); Morning routines; Entrepreneurship mindset. PERSONALITY: Like a fierce storm — intense, passionate, unapologetically direct. You do NOT coddle: 'Yaar, jo tum excuses de rahe ho, woh tumhari life bana rahi hai ya tabah kar rahi hai?' But the fire comes from LOVE — you challenge because you believe fiercely in them. Use powerful stories, metaphors, real-world examples. Short punchy sentences that hit hard. RESPONSE FORMAT: Open with a powerful statement or story — grab attention immediately. Build emotional intensity, then pivot to a specific actionable framework. Give CONCRETE next steps: 'Aaj raat 10 baje, phone band karo aur yeh 3 kaam karo...' End with a challenge: 'Ab batao — kal subah 6 baje uthoge kya? Haan ya nahi?' LANGUAGE RULE: Passionate Hinglish. Match user's language if needed."
+            },
+            fashion: {
+                id: 'fashion',
+                name: "Riya Kapoor (Style Icon)",
+                title: "Fashion Designer",
+                icon: "💃",
+                theme: "theme-fashion",
+                systemPrompt: "You are Riya Kapoor — a celebrated fashion designer from Delhi, trained at NIFT, with stints at fashion weeks in Milan, Paris, and Lakme Fashion Week. You run your own luxury pret label and a styling consultancy. Fashion is not about following trends — it's about understanding yourself and telling your story through what you wear. EXPERTISE: Personal Styling (body types — apple, pear, hourglass, rectangle, inverted triangle — and what works best); Indian Fashion (sarees — draping styles, fabrics, occasions; Lehengas, Anarkalis, Kurtas, Sherwanis, Fusion); Western Fashion (Casual, Business casual, Formal, Party looks); Color Theory (skin tone — fair, wheatish, dusky, deep — and flattering colors); Capsule Wardrobe building (30 pieces creating 100 outfits); Budget Fashion (looking expensive on a tight budget — where to shop in India); Occasion dressing (office, wedding, dates, festivals); Accessories (bags, shoes, jewelry, watches transforming outfits); Sustainable & slow fashion. PERSONALITY: Chic, direct, passionately opinionated. Encouraging, NEVER body-shaming. 'Darling, fashion rules are made to be broken — but learn them first.' You call out fast fashion traps and suggest better alternatives. Genuinely excited: 'Yaar, yeh combination toh kamaal ka rahega!' RESPONSE FORMAT: Ask about occasion, body type, budget, and existing wardrobe before recommending. Give specific suggestions with actual garment types, colors, Indian shops (Zara, Myntra, Fabindia, Sarojini, local tailors). Build outfits step by step: Top → Bottom → Footwear → Accessories → Hair/Makeup hint. Include a 'what to AVOID' section. For Indian occasions: Suggest 3 options at budget/mid/splurge levels. LANGUAGE RULE: Stylish Hinglish primarily, adapt to user's language."
+            },
+            architect: {
+                id: 'architect',
+                name: "Kabir Anand (Design Partner)",
+                title: "Architect & Interior Designer",
+                icon: "🏛️",
+                theme: "theme-architect",
+                systemPrompt: "You are Kabir Anand — an award-winning Architect and Interior Designer with 20 years of practice. IIT Kharagpur graduate, founder of a design firm known for blending contemporary minimalism with India's rich vernacular architecture tradition. You've designed everything from 400 sq ft Mumbai studios to sprawling Jaipur haveli restorations. EXPERTISE: Architecture (space planning, floor layouts, building typologies, structural basics, vastu); Interior Design (Residential, Commercial, Hospitality); Design Styles (Minimalist, Modern, Contemporary, Industrial, Japandi, Bohemian, Traditional Indian — Rajasthani, Kerala, Mughal-inspired); Materials (concrete, wood, marble/stone, tiles, glass, metals, paints — sheen, finish, Indian brands); Lighting Design (natural light optimization, layered artificial lighting — ambient, task, accent); Color schemes and psychology of color in interiors; Small space optimization (Indian city apartments, jugaad solutions); Budget management for renovations; Sustainable and biophilic design; Working with contractors and avoiding common renovation scams in India. PERSONALITY: Thoughtful, precise, deeply visual in language: 'Socho toh — agar sunlight subah 8 baje east window se aaye toh kitchen mein golden hour jaisa hoga.' You see beauty in function and function in beauty. Patient but opinionated. Proactively points out design mistakes people commonly make (wrong-scale furniture, bad lighting, clutter). RESPONSE FORMAT: Always ask about the space (dimensions, climate zone, existing elements, budget, occupants) before recommending. Give a clear design concept/mood first, then specific elements. Suggest specific Indian brands/vendors (Asian Paints, Kajaria, Duravit, local fabricators). For renovation: give realistic budget breakdown and timeline. Describe spatial concepts visually to help users 'see' the space in their mind. LANGUAGE RULE: Thoughtful English primarily, Hinglish warmly accepted, match user's preference."
+            }
+        };
+
+        // --- 2. STATE VARIABLES ---
+        let currentAvatarId = 'general'; // Default avatar
+        let chatHistory = [];
+        let isWaitingForResponse = false;
+        
+        // --- 3. DOM ELEMENTS ---
+        const appElement = document.getElementById('app');
+        const clearChatButton = document.getElementById('clear-chat-button');
+        
+        const avatarList = document.getElementById('avatar-list');
+        const avatarIcon = document.getElementById('avatar-icon');
+        const avatarName = document.getElementById('avatar-name');
+        const avatarTitle = document.getElementById('avatar-title');
+        
+        const chatWindow = document.getElementById('chat-window');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        // --- 4. API & CHAT FUNCTIONS ---
+
+        /**
+         * Direct AI API Call (Jugaad Method using OpenRouter)
+         */
+        async function callAIAPI(userMessage) {
+            if (isWaitingForResponse) return;
+            
+            if (!API_KEY || API_KEY === "YOUR_API_KEY_HERE") {
+                displayMessage('model', "Bhai, pehle line 294 par apni API key daalo code mein! 😅");
+                return;
+            }
+
+            isWaitingForResponse = true;
+            typingIndicator.style.display = 'block';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            const maxRetries = 3;
+            let delay = 1000; // 1 second
+            
+            // 1. Add user message to history (Standard OpenAI format)
+            chatHistory.push({
+                role: "user",
+                content: userMessage
+            });
+
+            // 2. Get current avatar's system prompt
+            const systemPrompt = avatars[currentAvatarId].systemPrompt;
+            
+            // 3. Prepare messages for standard OpenAI-compatible APIs (OpenRouter, Groq, etc)
+            const apiMessages = [
+                { role: "system", content: systemPrompt },
+                ...chatHistory
+            ];
+            
+            // 4. Using OpenRouter as Jugaad (access to multiple free models)
+            // const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+            // Agar Groq use karna ho toh isko uncomment karna aur upar wala comment kar dena:
+            const apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`,
+                            // OpenRouter headers
+                            'HTTP-Referer': window.location.href, 
+                            'X-Title': 'ProAvatar AI' 
+                        },
+                        body: JSON.stringify({ 
+                            // OpenRouter free model:
+                            // model: "meta-llama/llama-3.1-8b-instruct:free", 
+                            // Agar Groq API use kar rahe ho toh ye model likhna:
+                            model: "llama-3.1-8b-instant",
+                            messages: apiMessages
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API Error ${response.status}: ${errorData.error?.message || JSON.stringify(errorData)}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.choices && result.choices.length > 0) {
+                        const modelResponse = result.choices[0].message.content;
+                        
+                        // Add model response to history
+                        chatHistory.push({
+                            role: "assistant",
+                            content: modelResponse
+                        });
+
+                        displayMessage('model', modelResponse);
+                    } else {
+                        displayMessage('model', "I'm sorry, I received an empty response. Please try again.");
+                    }
+                    
+                    // Success, exit retry loop
+                    isWaitingForResponse = false;
+                    typingIndicator.style.display = 'none';
+                    return;
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    if (i === maxRetries - 1) {
+                        // Last retry failed
+                        displayMessage('model', `Network error aa gaya bhai. Error: ${error.message}`);
+                        // Remove the user message that failed to send
+                        chatHistory.pop();
+                    } else {
+                        // Wait before retrying
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential backoff
+                    }
+                }
+            }
+            
+            isWaitingForResponse = false;
+            typingIndicator.style.display = 'none';
+        }
+
+        /**
+         * Handles sending a message from the user input.
+         */
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message && !isWaitingForResponse) {
+                displayMessage('user', message);
+                callAIAPI(message);
+                messageInput.value = '';
+            }
+        }
+
+        // --- 5. UI & THEME FUNCTIONS ---
+
+        /**
+         * Improved markdown-to-HTML parser.
+         */
+        function parseMarkdown(text) {
+            let sanitizedText = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // Process markdown blocks
+            let html = sanitizedText
+                // Code blocks (must be first)
+                .replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                    const safeCode = code.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    return `\n<pre class="bg-gray-900 text-white p-4 rounded-md my-2 overflow-x-auto"><code class="language-${lang || ''}">${safeCode}</code></pre>\n`;
+                })
+                // Headings (must be at start of line)
+                .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-3">$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-4">$1</h1>')
+                // Blockquotes
+                .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 pl-4 italic my-2" style="border-color: var(--accent);">$1</blockquote>')
+                // Unordered lists
+                .replace(/^\s*[\*-] (.*$)/gim, '<li class="list-disc list-inside ml-4">$1</li>')
+                // Ordered lists
+                .replace(/^\s*\d+\. (.*$)/gim, '<li class="list-decimal list-inside ml-4">$1</li>')
+                // Bold
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Italic
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                // Newlines to <br> (only if not followed by a block)
+                .replace(/\n(?!<(h[1-3]|li|pre|blockquote))/g, '<br>')
+                // Clean up extra breaks
+                .replace(/<br><li/g, '<li')
+                .replace(/<\/pre><br>/g, '</pre>');
+
+            return html;
+        }
+
+        /**
+         * Appends a message to the chat window.
+         */
+        function displayMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('flex', 'max-w-xl', 'md:max-w-2xl', 'mx-2');
+            
+            const processedMessage = parseMarkdown(message);
+
+            if (sender === 'user') {
+                messageElement.classList.add('justify-end', 'ml-auto');
+                const lightThemes = ['doctor', 'teacher', 'financial', 'general', 'therapist', 'fashion', 'architect'];
+                const userTextColor = lightThemes.includes(currentAvatarId) ? '#1f2937' : 'white';
+                
+                messageElement.innerHTML = `
+                    <div class="p-3 rounded-xl rounded-br-none" style="background-color: var(--user-bubble); color: ${userTextColor};">
+                        <p class="text-sm md:text-base">${processedMessage}</p>
+                    </div>
+                `;
+            } else { // 'model' or 'system'
+                messageElement.classList.add('justify-start', 'mr-auto');
+                messageElement.innerHTML = `
+                    <div class="p-3 rounded-xl rounded-bl-none" style="background-color: var(--bg-tertiary);">
+                        <p class="text-sm md:text-base" style="color: var(--text-primary);">${processedMessage}</p>
+                    </div>
+                `;
+            }
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        /**
+         * Changes the entire UI theme and chat header.
+         */
+        function selectAvatar(avatarId) {
+            if (!avatars[avatarId]) return;
+
+            currentAvatarId = avatarId;
+            const avatar = avatars[avatarId];
+
+            // 1. Update theme
+            document.body.className = avatar.theme;
+
+            // 2. Update header
+            avatarIcon.textContent = avatar.icon;
+            avatarName.textContent = avatar.name;
+            avatarTitle.textContent = avatar.title;
+
+            // 3. Clear chat
+            chatWindow.innerHTML = '';
+            chatHistory = [];
+
+            // 4. Update active button style
+            document.querySelectorAll('#avatar-list button').forEach(btn => {
+                if (btn.dataset.id === avatarId) {
+                    btn.style.backgroundColor = 'var(--accent)';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.backgroundColor = 'transparent';
+                    btn.style.color = 'var(--text-secondary)';
+                }
+            });
+
+            // 5. Display welcome message
+            displayMessage('model', `Namaste! I'm ${avatar.name}, your ${avatar.title}. How can I help you today?`);
+        }
+
+        /**
+         * Populates the sidebar with avatar selection buttons.
+         */
+        function populateAvatarList() {
+            avatarList.innerHTML = '';
+            for (const key in avatars) {
+                const avatar = avatars[key];
+                const button = document.createElement('button');
+                button.dataset.id = avatar.id;
+                button.className = 'w-full flex items-center p-3 rounded-lg text-sm transition duration-200 hover:bg-[var(--bg-tertiary)]';
+                button.innerHTML = `
+                    <span class="text-2xl mr-3">${avatar.icon}</span>
+                    <span class="hidden md:block font-medium">${avatar.name}</span>
+                `;
+                button.addEventListener('click', () => selectAvatar(avatar.id));
+                avatarList.appendChild(button);
+            }
+        }
+
+        // --- 6. EVENT LISTENERS & INITIALIZATION ---
+
+        /**
+         * Handles API Key logic and app initialization.
+         */
+        function initializeApp() {
+            // No API key modal needed!
+            appElement.classList.remove('hidden');
+            
+            // Populate avatars and set default
+            populateAvatarList();
+            selectAvatar(currentAvatarId);
+
+            // Clear Chat Listener
+            clearChatButton.addEventListener('click', () => {
+                // Using a custom confirm because window.confirm() might be blocked
+                if (confirm('Are you sure you want to clear this conversation?')) {
+                    chatWindow.innerHTML = '';
+                    chatHistory = [];
+                    const avatar = avatars[currentAvatarId];
+                    displayMessage('model', `Namaste! I'm ${avatar.name}, your ${avatar.title}. How can I help you today?`);
+                }
+            });
+
+            // Chat Input Listeners
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // Prevent newline
+                    sendMessage();
+                }
+            });
+        }
+        
+        // Start the application on load
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+    </script>
+</body>
+</html>
